@@ -1,0 +1,23 @@
+name: temporal_rl_env
+channels:
+  - conda-forge
+  - defaults
+  - pytorch
+dependencies:
+  - python=3.10
+  - pip
+  - numpy==2.2.5
+  - matplotlib=3.10.1
+  - tqdm=4.67.1
+  - pytorch=2.5.1
+  - torchvision=0.20.1
+  - torchaudio=2.5.1
+  - psutil=7.0.0
+  - pyyaml=6.0.2
+  - pip:
+      - gymnasium[mujoco]
+      - mujoco==3.3.1
+      - stable-baselines3==2.6.0
+      - sb3-contrib==2.6.0
+      - pandas==2.2.3
+      - scikit-learn==1.2.2

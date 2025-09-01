@@ -1,0 +1,111 @@
+# ---------------------------------
+# --- Environment Configuration ---
+# ---------------------------------
+environment:
+  name: "Walker2d-v5"
+  render: false
+  
+  # -- Noise Configuration --
+  # Standard deviation of noise to add to observations (0.0 = no noise)
+  noise_std: 0.0
+  # Type of noise - Options: "gaussian", "uniform"
+  noise_type: "gaussian"
+
+# --------------------------
+# --- Model Architecture ---
+# --------------------------
+model:
+  # Network type - Options: "mlp", "lstm", "cyclenet"
+  network_type: "cyclenet"
+  # Device for training - Options: "auto", "cpu", "cuda"
+  device: "cpu"
+
+  # -- Multi-Layer Perceptron (MLP) Configuration --
+  mlp:
+    # Architecture of MLP layers
+    net_arch: [16, 16]
+
+  # -- Long Short-Term Memory (LSTM) Configuration --
+  lstm:
+    # Architecture of LSTM layers
+    net_arch: [16, 16]
+    # Size of LSTM hidden state
+    lstm_hidden_size: 16
+
+  # -- CycleNet Architecture Configuration --
+  cyclenet:
+    # Sequence length
+    seq_len: 16
+    # Cycle length
+    cycle: 16
+    # Model type - Options: "mlp", "linear"
+    model_type: "linear"
+    # Model size (only for "mlp")
+    d_model: 16
+    # Use Revin normalization
+    use_revin: false
+
+# --------------------------------------
+# --- Training Process Configuration ---
+# --------------------------------------
+training:
+  # Training mode - Options: "online", "offline" (offline only for MLP and CycleNet with PPO)
+  mode: "offline"
+  
+  # -- Online training settings --
+  online:
+    # Total number of training timesteps
+    total_timesteps: 10000000
+    # Size of training batches
+    batch_size: 256
+    # Learning rate for optimizer
+    learning_rate: 0.0003
+    # Learning rate schedule - Options: "linear", "constant"
+    lr_schedule: "constant"
+    
+    # PPO-specific parameters
+    # Number of steps per update
+    n_steps: 2048
+    # Maximum gradient norm for clipping
+    max_grad_norm: 0.5
+  
+  # -- Offline training settings --
+  offline:
+    # Path to dataset for offline training
+    dataset_path: "data/example_output/mlp/run_walker2d-v5_mlp_arch16-16_2025/dataset.pkl"
+    # Number of training epochs
+    epochs: 50
+    # Batch size for offline training
+    batch_size: 256
+    # Learning rate for offline training
+    learning_rate: 0.0001
+    # Learning rate schedule for offline training
+    lr_schedule: "constant"
+    
+    # PPO-specific parameters
+    # Maximum gradient norm for clipping
+    max_grad_norm: 0.5
+    
+  # Common settings for all algorithms
+  rolling_length: 100
+  enable_live_plot: false
+
+# ----------------------------------------
+# --- Dataset Collection Configuration ---
+# ----------------------------------------
+dataset_collection:
+  # Number of episodes to collect
+  num_episodes: 100
+  # Collection type - Options: "random", "model"
+  collection_type: "model"
+  # Path to trained model for model-based collection (optional)
+  model_path: "data/example_output/cyclenet_offline/run_walker2d-v5_cyclenet_seq16_cycle16_linear_dmodel16_revinfalse_{seed}/model.zip"
+  # Output path for collected dataset
+  output_path: "data/example_output/cyclenet_offline/run_walker2d-v5_cyclenet_seq16_cycle16_linear_dmodel16_revinfalse_{seed}/dataset.pkl"
+
+# -------------------------------------------------
+# --- Experiment Setup for Reproducible Results ---
+# -------------------------------------------------
+experiment:
+  # Random seed for reproducibility
+  seed: 2025
